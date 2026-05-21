@@ -1,0 +1,18 @@
+folderId = selectCH.value;
+                tenCHSelected = selectCH.options[selectCH.selectedIndex]?.text;
+            }
+
+            // Kiểm tra và hiển thị dữ liệu
+            if (folderId && folderId !== "") {
+                placeholder.style.display = "none";
+                iframe.style.display = "block";
+                // Nhúng thư mục Google Drive dưới giao diện Lưới (Grid preview) giúp QLKV thấy ảnh trực diện
+                iframe.src = `https://drive.google.com/embeddedfolderview?id=${folderId}#grid`;
+                titleHienThi.innerText = `Báo cáo ảnh: ${tenCHSelected}`;
+            } else {
+                alert("Vui lòng nhập tên/mã Cửa hàng chính xác hoặc chọn từ danh sách!");
+            }
+        }
+    </script>
+</body>
+</html>
