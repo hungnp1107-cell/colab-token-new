@@ -1,16 +1,67 @@
-folderId = selectCH.value;
+<div id="placeholder" class="placeholder-text">Vui lòng chọn QLKV và Cửa hàng ở thanh bên trái, sau đó bấm "XEM ẢNH TRỰC DIỆN" để tải dữ liệu báo cáo.</div>
+            <iframe id="driveFrame" src=""></iframe>
+        </div>
+    </div>
+
+    <script>
+        // Dữ liệu chạy thử nghiệm cấu trúc 1000 CH
+        const dataHeThong = {
+            "kv_A": [
+                { id: "1aB_cDeFgHiJkLmNoPqRsTuVwXyZ", name: "CH001 - Cửa hàng mẫu A" },
+                { id: "1aB_cDeFgHiJkLmNoPqRsTuVwXyZ", name: "CH002 - Cửa hàng mẫu B" }
+            ],
+            "kv_B": [
+                { id: "1aB_cDeFgHiJkLmNoPqRsTuVwXyZ", name: "CH500 - Cửa hàng mẫu C" }
+            ]
+        };
+
+        function capNhatDanhSachCH() {
+            const qlkvSelected = document.getElementById("selectQLKV").value;
+            const selectCH = document.getElementById("selectCH");
+            selectCH.innerHTML = '<option value="">-- Chọn CH --</option>';
+            document.getElementById("searchCH").value = "";
+
+            if (qlkvSelected && dataHeThong[qlkvSelected]) {
+                dataHeThong[qlkvSelected].forEach(ch => {
+                    let option = document.createElement("option");
+                    option.value = ch.id;
+                    option.text = ch.name;
+                    selectCH.appendChild(option);
+                });
+            }
+        }
+
+        function xemBaoCao() {
+            const selectCH = document.getElementById("selectCH");
+            const searchInput = document.getElementById("searchCH").value.trim().toLowerCase();
+            const iframe = document.getElementById("driveFrame");
+            const placeholder = document.getElementById("placeholder");
+            const titleHienThi = document.getElementById("titleHienThi");
+
+            let folderId = "";
+            let tenCHSelected = "";
+
+            if (searchInput !== "") {
+                for (let kv in dataHeThong) {
+                    let findCH = dataHeThong[kv].find(ch => ch.name.toLowerCase().includes(searchInput));
+                    if (findCH) {
+                        folderId = findCH.id;
+                        tenCHSelected = findCH.name;
+                        break;
+                    }
+                }
+            } else {
+                folderId = selectCH.value;
                 tenCHSelected = selectCH.options[selectCH.selectedIndex]?.text;
             }
 
-            // Kiểm tra và hiển thị dữ liệu
             if (folderId && folderId !== "") {
                 placeholder.style.display = "none";
                 iframe.style.display = "block";
-                // Nhúng thư mục Google Drive dưới giao diện Lưới (Grid preview) giúp QLKV thấy ảnh trực diện
                 iframe.src = `https://drive.google.com/embeddedfolderview?id=${folderId}#grid`;
                 titleHienThi.innerText = `Báo cáo ảnh: ${tenCHSelected}`;
             } else {
-                alert("Vui lòng nhập tên/mã Cửa hàng chính xác hoặc chọn từ danh sách!");
+                alert("Vui lòng nhập chính xác hoặc chọn Cửa hàng!");
             }
         }
     </script>
